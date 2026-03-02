@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unmute Tech — AI Product Studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>⚡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06060e;--surface:#0e0e1a;--surface2:#161625;--border:#1e1e32;
+  --text:#e8e8f0;--text2:#9494a8;--text3:#5c5c72;
+  --accent:#0F9B8E;--accent2:#14C4B4;--accent-glow:rgba(15,155,142,.15);
+  --purple:#7c5cfc;--orange:#ff6b35;--pink:#ff4d8d;
+  --font:"DM Sans",sans-serif;--serif:"DM Serif Display",serif;--mono:"JetBrains Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:rgba(6,6,14,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(30,30,50,.5);transition:all .3s}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:var(--mono);font-weight:700;font-size:18px;color:var(--accent);text-decoration:none;letter-spacing:-0.5px}
+.logo span{color:var(--text3)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;letter-spacing:0.3px}
+.nav-links a:hover{color:var(--accent2)}
+
+/* ─── HERO ─── */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(124,92,252,.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;padding:120px 32px 80px;display:grid;grid-template-columns:1.2fr 1fr;gap:64px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:var(--serif);font-size:clamp(36px,5vw,62px);line-height:1.1;margin-bottom:20px;letter-spacing:-1px}
+.hero h1 em{font-style:normal;color:var(--accent2);position:relative}
+.hero p{font-size:18px;color:var(--text2);line-height:1.7;margin-bottom:32px;max-width:520px}
+.hero-buttons{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Terminal */
+.terminal{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;font-family:var(--mono);font-size:13px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.terminal-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.terminal-dot{width:10px;height:10px;border-radius:50%}.terminal-dot:nth-child(1){background:#ff5f57}.terminal-dot:nth-child(2){background:#febc2e}.terminal-dot:nth-child(3){background:#28c840}
+.terminal-title{margin-left:8px;font-size:11px;color:var(--text3)}
+.terminal-body{padding:20px;line-height:1.8;color:var(--text3)}
+.terminal-body .cm{color:var(--text3)}.terminal-body .kw{color:var(--purple)}.terminal-body .fn{color:var(--accent2)}.terminal-body .str{color:var(--orange)}.terminal-body .num{color:var(--pink)}.terminal-body .wh{color:var(--text)}
+
+/* ─── SECTION ─── */
+section{padding:100px 0}
+.container{max-width:1200px;margin:0 auto;padding:0 32px}
+.section-label{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.section-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,42px);margin-bottom:16px;letter-spacing:-0.5px}
+.section-desc{font-size:16px;color:var(--text2);max-width:560px;line-height:1.7;margin-bottom:48px}
+
+/* ─── STATS BAR ─── */
+.stats{padding:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat-num{font-family:var(--serif);font-size:36px;color:var(--accent2)}
+.stat-label{font-size:13px;color:var(--text3);margin-top:4px}
+
+/* ─── SERVICES ─── */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.service-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.service-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 32px var(--accent-glow)}
+.service-icon{width:44px;height:44px;border-radius:10px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.service-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.service-card p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ─── PRODUCTS ─── */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;transition:all .3s;display:flex;flex-direction:column;text-decoration:none;color:inherit;position:relative;overflow:hidden}
+.product-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 40px var(--accent-glow)}
+.product-card.featured{border-color:var(--accent);background:linear-gradient(135deg,var(--surface),rgba(15,155,142,.06))}
+.product-card.featured::before{content:'★ FEATURED';position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;color:var(--accent);background:var(--accent-glow);padding:3px 8px;border-radius:4px;letter-spacing:1px}
+.product-emoji{font-size:32px;margin-bottom:14px}
+.product-badge{display:inline-block;padding:3px 10px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:0.5px;margin-bottom:12px;width:fit-content}
+.badge-appstore{background:rgba(40,200,64,.12);color:#28c840}
+.badge-web{background:rgba(254,188,46,.12);color:#febc2e}
+.badge-desktop{background:rgba(124,92,252,.12);color:#7c5cfc}
+.product-card h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.product-card p{font-size:13px;color:var(--text2);line-height:1.6;flex:1}
+.product-link{display:inline-flex;align-items:center;gap:4px;margin-top:14px;font-size:12px;font-weight:600;color:var(--accent);transition:color .2s}
+.product-card:hover .product-link{color:var(--accent2)}
+
+/* ─── TECH ─── */
+.tech-tags{display:flex;flex-wrap:wrap;gap:8px}
+.tech-tag{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:500;color:var(--text2);transition:all .2s}
+.tech-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ─── PROCESS ─── */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.process-card{text-align:center;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.process-num{font-family:var(--serif);font-size:32px;color:var(--accent);margin-bottom:12px}
+.process-card h3{font-size:15px;font-weight:700;margin-bottom:8px}
+.process-card p{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* ─── ABOUT ─── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.about-text p{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+.about-checks{list-style:none;display:flex;flex-direction:column;gap:10px}
+.about-checks li{font-size:14px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.about-checks li::before{content:'✓';color:var(--accent);font-weight:700}
+
+/* ─── CONTACT ─── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.contact-info{display:flex;flex-direction:column;gap:20px}
+.contact-item{display:flex;gap:14px;align-items:flex-start}
+.contact-icon{width:40px;height:40px;border-radius:10px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.contact-item h4{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:2px}
+.contact-item p{font-size:15px;color:var(--text)}
+.contact-form{display:flex;flex-direction:column;gap:12px}
+.contact-form input,.contact-form textarea{padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font);font-size:14px;outline:none;transition:border-color .2s}
+.contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent)}
+.contact-form textarea{resize:vertical;min-height:120px}
+
+/* ─── FOOTER ─── */
+footer{padding:32px 0;border-top:1px solid var(--border);text-align:center}
+footer p{font-size:12px;color:var(--text3)}
+footer a{color:var(--text2);text-decoration:none}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .process-grid{grid-template-columns:1fr 1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .about-grid,.contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .services-grid,.process-grid{grid-template-columns:1fr}
+  .products-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .6s ease both}
+.delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}.delay-3{animation-delay:.3s}.delay-4{animation-delay:.4s}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">Unmute<span>.tech</span></a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="fade-up">
+      <div class="hero-badge">AI Product Studio · Shipping Since 2024</div>
+      <h1>We <em>build</em> with AI.<br>Not just talk about it.</h1>
+      <p>Unmute Tech is an AI product studio that ships real products — from idea to App Store in days, not months. 9 products across software, web, and hardware. Solo-built. AI-native from line one.</p>
+      <div class="hero-buttons">
+        <a href="#products" class="btn btn-primary">See Our Products →</a>
+        <a href="#contact" class="btn btn-outline">Work With Us</a>
+      </div>
+    </div>
+    <div class="terminal fade-up delay-2">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div><div class="terminal-dot"></div><div class="terminal-dot"></div>
+        <span class="terminal-title">studio.ts — unmute</span>
+      </div>
+      <div class="terminal-body">
+        <span class="cm">// Unmute Tech — AI Product Studio</span><br><br>
+        <span class="kw">const</span> <span class="wh">studio</span> = {<br>
+        &nbsp;&nbsp;<span class="fn">products</span>: <span class="num">9</span>,<br>
+        &nbsp;&nbsp;<span class="fn">platforms</span>: [<span class="str">'iOS'</span>, <span class="str">'Web'</span>, <span class="str">'Desktop'</span>, <span class="str">'Hardware'</span>],<br>
+        &nbsp;&nbsp;<span class="fn">stack</span>: [<span class="str">'Claude'</span>, <span class="str">'Cursor'</span>, <span class="str">'React Native'</span>],<br>
+        &nbsp;&nbsp;<span class="fn">approach</span>: <span class="str">'AI-native development'</span>,<br>
+        &nbsp;&nbsp;<span class="fn">motto</span>: <span class="str">'Ship fast. Ship real.'</span><br>
+        };<br><br>
+        <span class="fn">studio</span>.<span class="kw">launch</span>() <span class="cm">// ⚡ 9 products and counting</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div><div class="stat-num">9</div><div class="stat-label">Live Products</div></div>
+      <div><div class="stat-num">4</div><div class="stat-label">Platforms (iOS · Web · Desktop · Hardware)</div></div>
+      <div><div class="stat-num">100%</div><div class="stat-label">AI-Native Built</div></div>
+      <div><div class="stat-num">Solo</div><div class="stat-label">Founder-Built</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-label">Services</div>
+    <h2 class="section-title">What We Build</h2>
+    <p class="section-desc">End-to-end AI-powered solutions — from automation workflows to production apps.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🤖</div>
+        <h3>AI Workflow Automation</h3>
+        <p>Replace manual processes with intelligent pipelines. Deal sourcing, content distribution, reporting — all automated with keyword matching and AI classification.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📱</div>
+        <h3>Mobile App Development</h3>
+        <p>iOS and cross-platform apps from prototype to App Store. AI-assisted rapid development with production-grade quality.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💻</div>
+        <h3>Web Applications</h3>
+        <p>Interactive web tools, data visualization dashboards, and SaaS platforms built for performance and real-world adoption.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📊</div>
+        <h3>Internal Tools & Dashboards</h3>
+        <p>Custom operational dashboards for teams managing complex workloads — project tracking, revenue analytics, pipeline management.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔌</div>
+        <h3>API & Integration</h3>
+        <p>Connect your existing tools into unified workflows. Multi-platform data aggregation and API development.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🧠</div>
+        <h3>Embedded AI Hardware</h3>
+        <p>AI companions and edge devices on Raspberry Pi and embedded platforms. Voice interaction, persistent memory, and ambient intelligence — no cloud dependency.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🚀</div>
+        <h3>AI Product Strategy</h3>
+        <p>From ideation to monetization. Product-market fit analysis, tech stack selection, and go-to-market execution for AI-first products.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">Products</div>
+    <h2 class="section-title">Our Products</h2>
+    <p class="section-desc">9 products across health, social, finance, enterprise, hardware, and entertainment — all built AI-natively.</p>
+    <div class="products-grid">
+
+      <a href="#contact" class="product-card featured">
+        <div class="product-emoji">⌘</div>
+        <span class="product-badge badge-desktop">Desktop + iOS</span>
+        <h3>Command Center</h3>
+        <p>The solo founder's operating system. Manage multiple products, content calendar, revenue tracking, BD pipeline, and smart import — all from one unified dashboard.</p>
+        <span class="product-link">Learn More →</span>
+      </a>
+
+      <div class="product-card featured">
+        <div class="product-emoji">🧠</div>
+        <span class="product-badge" style="background:rgba(255,77,141,.12);color:#ff4d8d">Hardware + AI</span>
+        <h3>Yujin</h3>
+        <p>A personal AI companion built on Raspberry Pi. Voice interaction, persistent memory, and ambient awareness in a standalone device — no phone, no cloud dashboard. Not a smart speaker. Not a chatbot. Something in between.</p>
+        <span class="product-link" style="color:var(--text3)">In Development →</span>
+      </div>
+
+      <a href="https://apps.apple.com/us/app/unmute-social/id6757704855" target="_blank" class="product-card">
+        <div class="product-emoji">💬</div>
+        <span class="product-badge badge-appstore">App Store</span>
+        <h3>Unmute Social</h3>
+        <p>A social interaction app that helps users break communication barriers and build meaningful connections through AI-powered conversation starters.</p>
+        <span class="product-link">View on App Store →</span>
+      </a>
+
+      <a href="https://apps.apple.com/us/app/petmeet/id6758263706" target="_blank" class="product-card">
+        <div class="product-emoji">🐾</div>
+        <span class="product-badge badge-appstore">App Store</span>
+        <h3>PetMeet</h3>
+        <p>A pet social platform connecting pet owners nearby. Find playmates, share pet life, and discover local pet-friendly spots.</p>
+        <span class="product-link">View on App Store →</span>
+      </a>
+
+      <a href="https://apps.apple.com/us/app/paita/id6758038285" target="_blank" class="product-card">
+        <div class="product-emoji">🎨</div>
+        <span class="product-badge badge-appstore">App Store</span>
+        <h3>PaiTa</h3>
+        <p>A creative photography tool with AI-enhanced features designed to unleash your visual creativity and capture stunning moments.</p>
+        <span class="product-link">View on App Store →</span>
+      </a>
+
+      <a href="https://wuray216-ctrl.github.io/apples-to-apples/" target="_blank" class="product-card">
+        <div class="product-emoji">🍎</div>
+        <span class="product-badge badge-web">Web App</span>
+        <h3>Apples to Apples</h3>
+        <p>A data-driven comparison and visualization tool that helps users understand regional differences through interactive analytics.</p>
+        <span class="product-link">Try It →</span>
+      </a>
+
+      <a href="https://wuray216-ctrl.github.io/-2025/" target="_blank" class="product-card">
+        <div class="product-emoji">🐴</div>
+        <span class="product-badge badge-web">Web Game</span>
+        <h3>Match Mania 2026</h3>
+        <p>A festive match-3 puzzle game with seasonal themes, delivering a relaxing and addictive casual gaming experience.</p>
+        <span class="product-link">Play Now →</span>
+      </a>
+
+      <div class="product-card" style="opacity:.7">
+        <div class="product-emoji">🏥</div>
+        <span class="product-badge badge-appstore">Coming Soon</span>
+        <h3>Health Checkup AI</h3>
+        <p>AI-powered health assessment tool that analyzes user inputs to provide personalized wellness insights and recommendations.</p>
+        <span class="product-link" style="color:var(--text3)">In Development</span>
+      </div>
+
+      <div class="product-card" style="opacity:.7">
+        <div class="product-emoji">📈</div>
+        <span class="product-badge badge-appstore">Coming Soon</span>
+        <h3>Quant Screener</h3>
+        <p>Quantitative stock screening tool with AI-driven analysis, helping investors filter opportunities using customizable financial metrics.</p>
+        <span class="product-link" style="color:var(--text3)">In Development</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section>
+  <div class="container">
+    <div class="section-label">Tech Stack</div>
+    <h2 class="section-title">Technologies We Use</h2>
+    <p class="section-desc">AI-native development with battle-tested frameworks and tools.</p>
+    <div class="tech-tags">
+      <span class="tech-tag">Raspberry Pi</span>
+      <span class="tech-tag">Claude AI</span>
+      <span class="tech-tag">Cursor</span>
+      <span class="tech-tag">React Native</span>
+      <span class="tech-tag">Expo</span>
+      <span class="tech-tag">React</span>
+      <span class="tech-tag">TypeScript</span>
+      <span class="tech-tag">Node.js</span>
+      <span class="tech-tag">Python</span>
+      <span class="tech-tag">Swift</span>
+      <span class="tech-tag">Vite</span>
+      <span class="tech-tag">PostgreSQL</span>
+      <span class="tech-tag">Redis</span>
+      <span class="tech-tag">Docker</span>
+      <span class="tech-tag">AWS</span>
+      <span class="tech-tag">Vercel</span>
+      <span class="tech-tag">GitHub Actions</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">Process</div>
+    <h2 class="section-title">How We Work</h2>
+    <p class="section-desc">From idea to production in days, not months.</p>
+    <div class="process-grid">
+      <div class="process-card">
+        <div class="process-num">01</div>
+        <h3>Discovery</h3>
+        <p>Understand the problem, map the workflow, identify what to automate. Output: clear requirements and scope.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">02</div>
+        <h3>Prototype</h3>
+        <p>AI-assisted rapid prototyping. Working MVP in days. Real UI, real data, real feedback loop.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">03</div>
+        <h3>Ship</h3>
+        <p>Production deployment with quality testing. App Store submission, web deployment, or internal rollout.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">04</div>
+        <h3>Iterate</h3>
+        <p>Post-launch analytics, user feedback integration, and continuous improvement. We maintain what we build.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">About</div>
+    <h2 class="section-title">About Unmute Tech</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Unmute Tech is an AI product studio based in Hangzhou, China. We build real products that real people use — not demos, not prototypes, not pitch decks.</p>
+        <p>With a background spanning private equity fund management, business development, and software engineering, we bring a rare combination of business acumen and technical execution to every project.</p>
+        <p>Our approach is simple: leverage AI tools to build at 10x speed without sacrificing quality. Every product in our portfolio was built AI-natively — from the first line of code to App Store deployment.</p>
+      </div>
+      <div>
+        <ul class="about-checks">
+          <li>9 products across 4 platforms (iOS, Web, Desktop, Hardware)</li>
+          <li>AI-native development methodology</li>
+          <li>PE fund management experience (¥1.6B AUM)</li>
+          <li>NUS Master's degree</li>
+          <li>Full-stack: iOS, Web, Desktop, Backend</li>
+          <li>Bilingual: English & 中文</li>
+          <li>Rapid delivery — weeks, not months</li>
+          <li>100% products shipped, 0% vaporware</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title">Let's Build Something</h2>
+    <p class="section-desc">Whether you need AI automation, a custom product, or a technical partner — we'd love to hear from you.</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div><h4>Location</h4><p>Hangzhou, China</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div><h4>Email</h4><p>postmaster@unmute.top</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🌐</div>
+          <div><h4>Website</h4><p>unmute.top</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🐙</div>
+          <div><h4>GitHub</h4><p>github.com/wuray216-ctrl</p></div>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="event.preventDefault();alert('Message sent! We\'ll get back to you soon.');">
+        <input type="text" placeholder="Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="text" placeholder="Company / Project">
+        <textarea placeholder="Tell us about your project..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send Inquiry →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:8px"><a href="#services">Services</a> &nbsp;·&nbsp; <a href="#products">Products</a> &nbsp;·&nbsp; <a href="#about">About</a> &nbsp;·&nbsp; <a href="#contact">Contact</a></p>
+    <p>© 2026 Unmute Tech. All rights reserved. | unmute.top</p>
+  </div>
+</footer>
+
+</body>
+</html>
